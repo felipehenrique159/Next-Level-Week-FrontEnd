@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
 import './App.css';
 import Header from './header'
+import Home from './pages/Home'
 
 function App() {
-
-  const counter = useState(0);
+  const [counter, setCounter] = useState(0);
 
  
 
   function handleButtonClick(){
-      counter += 1;
+     setCounter( counter + 1)
       console.log(counter)
   }
 
@@ -17,11 +17,7 @@ function App() {
        
      <div>
 
-    <Header title="Hello World"/>
-    
-          <h1>{counter}</h1>
-
-          <button type="button" onClick={handleButtonClick}>Aumentar</button>
+   <Home/>
        
      </div>
    
