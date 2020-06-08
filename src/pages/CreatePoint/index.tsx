@@ -1,4 +1,4 @@
-import React ,{useEffect}from 'react'
+import React ,{useEffect, useState}from 'react'
 import './style.css'
 import {Link} from 'react-router-dom'
 import {FiArrowLeft} from 'react-icons/fi' 
@@ -6,11 +6,22 @@ import logo from '../../assets/logo.svg'
 import { Map, TileLayer, Marker } from 'react-leaflet'
 import api from '../../services/api'
 
+interface Item{
+    id: number,
+    title:string,
+    image_url: string
+}
 
 const CreatePoint = () =>{
+
+    //array ou objeto informar tipo da variavel
+
+    const [items, setItems] = useState<Item[]>([]); //o estado chama items, setItems é nome da função
+                                                //começa o estado com array vazio
+
     useEffect(() =>{
         api.get('items').then(res =>{
-            console.log(res);
+            setItems(res.data);
         })
     },[])
     return(
@@ -99,30 +110,14 @@ const CreatePoint = () =>{
                  </legend>
 
         <ul className="items-grid">
-            <li>
-                <img src="http://localhost:3000/uploads/oleo.svg" alt=""/>
-                <span>Óleo de cozinha</span>
-            </li>
-            <li>
-                <img src="http://localhost:3000/uploads/oleo.svg" alt=""/>
-                <span>Óleo de cozinha</span>
-            </li>
-            <li className="selected">
-                <img src="http://localhost:3000/uploads/oleo.svg" alt=""/>
-                <span>Óleo de cozinha</span>
-            </li>
-            <li>
-                <img src="http://localhost:3000/uploads/oleo.svg" alt=""/>
-                <span>Óleo de cozinha</span>
-            </li>
-            <li>
-                <img src="http://localhost:3000/uploads/oleo.svg" alt=""/>
-                <span>Óleo de cozinha</span>
-            </li>
-            <li>
-                <img src="http://localhost:3000/uploads/oleo.svg" alt=""/>
-                <span>Óleo de cozinha</span>
-            </li>
+            {items.map(item =>(
+            <li key={item.id}>
+            <img src={item.image_url} alt=""/>
+            <span>{item.title}</span>
+</li>
+            ))}
+           
+            
         </ul>
 
              </fieldset>
