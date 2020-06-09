@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import {FiArrowLeft} from 'react-icons/fi' 
 import logo from '../../assets/logo.svg'
 import { Map, TileLayer, Marker } from 'react-leaflet'
+import {LeafletMouseEvent, latLng} from 'leaflet'
 import api from '../../services/api'
 import axios from 'axios'
 
@@ -34,6 +35,10 @@ const CreatePoint = () =>{
     
     const [selectedCity, setSelectCity] = useState('0')
     
+    const [selectedPosition, setSelectedPosition] = useState<[number,number]>([0,0])
+    
+    const [initialPosition, setInitialPosition] = useState<[number,number]>([0,0])
+  
     useEffect(() =>{
         api.get('items').then(res =>{
             setItems(res.data);
@@ -60,6 +65,16 @@ const CreatePoint = () =>{
     
     }
     },[selectedUf]) 
+    useEffect(()=>{  //carregar cidades ao selecionar uf
+      
+        navigator.geolocation.getCurrentPosition(position =>{  //retornar a posição do usuario
+            const {latitude , longitude} = position.coords;
+
+            setInitialPosition([latitude,longitude]);
+        })
+    
+    
+    },[]) 
 
     function handleSelectUF(event: ChangeEvent<HTMLSelectElement>){
       const uf = event.target.value
@@ -70,6 +85,10 @@ const CreatePoint = () =>{
       setSelectCity(city)
     }
 
+    function handleMapClick(event: LeafletMouseEvent){
+        setSelectedPosition([event.latlng.lat,
+            event.latlng.lng])
+    }
     
     return(
         <div id="page-create-point">
@@ -122,11 +141,11 @@ const CreatePoint = () =>{
                      <span>Selecione o endereço no mapa</span>
                  </legend>
 
-                 <Map center={[-19.8520046,-43.9150582]} zoom={15}>
+                 <Map center={initialPosition} zoom={15} onclick={handleMapClick}>
                      <TileLayer attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
 
-               <Marker position={[-19.8520046,-43.9150582]}/>
+               <Marker position={selectedPosition}/>
 
                  </Map>
 
