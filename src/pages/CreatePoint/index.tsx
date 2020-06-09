@@ -38,6 +38,15 @@ const CreatePoint = () =>{
     const [selectedPosition, setSelectedPosition] = useState<[number,number]>([0,0])
     
     const [initialPosition, setInitialPosition] = useState<[number,number]>([0,0])
+
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        whatsapp: ''
+    })
+
+
+    const [selectedItems, setSelectedItems] = useState<number[]>([])
   
     useEffect(() =>{
         api.get('items').then(res =>{
@@ -90,6 +99,29 @@ const CreatePoint = () =>{
             event.latlng.lng])
     }
     
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>){
+        const {name,value} = event.target;
+       setFormData({...formData, [name]:value})
+    }
+
+    function handleSelectItem(id: number){
+        const alreadySelected = selectedItems.findIndex(item => item === id);
+
+        if(alreadySelected >= 0){
+            const filteredItems = selectedItems.filter(item=> item !==id);
+            setSelectedItems(filteredItems)
+        }
+        else{
+            setSelectedItems([ ...selectedItems, id ])
+
+        }
+
+    }
+
+    function handleSubmit(){
+        
+    }
+
     return(
         <div id="page-create-point">
             <header>
@@ -113,6 +145,7 @@ const CreatePoint = () =>{
             <input type="text"
                 name="name"
                 id="name"
+                onChange={handleInputChange}
             />
         </div>
 
@@ -123,6 +156,7 @@ const CreatePoint = () =>{
             <input type="email"
                 name="email"
                 id="email"
+                 onChange={handleInputChange}
             />
         </div>
         <div className="field">
@@ -130,6 +164,7 @@ const CreatePoint = () =>{
             <input type="text"
                 name="whatsapp"
                 id="whatsapp"
+                onChange={handleInputChange}
             />
         </div>
         </div>
@@ -185,7 +220,10 @@ const CreatePoint = () =>{
 
         <ul className="items-grid">
             {items.map(item =>(
-            <li key={item.id}>
+            <li key={item.id} 
+            onClick={() => handleSelectItem(item.id)}
+            className={selectedItems.includes(item.id) ? 'selected' : ''}
+            >
             <img src={item.image_url} alt=""/>
             <span>{item.title}</span>
 </li>
