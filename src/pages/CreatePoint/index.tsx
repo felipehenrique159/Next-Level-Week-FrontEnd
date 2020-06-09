@@ -1,6 +1,6 @@
 import React ,{useEffect, useState, ChangeEvent, FormEvent}from 'react'
 import './style.css'
-import {Link} from 'react-router-dom'
+import {Link , useHistory} from 'react-router-dom'
 import {FiArrowLeft} from 'react-icons/fi' 
 import logo from '../../assets/logo.svg'
 import { Map, TileLayer, Marker } from 'react-leaflet'
@@ -39,6 +39,8 @@ const CreatePoint = () =>{
     
     const [initialPosition, setInitialPosition] = useState<[number,number]>([0,0])
 
+    const history = useHistory();
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -59,7 +61,7 @@ const CreatePoint = () =>{
           const iniciaisUF = res.data.map(uf => uf.sigla)
         setUfs(iniciaisUF)
         })
-    })
+    },[])
 
     useEffect(()=>{  //carregar cidades ao selecionar uf
         if(selectedUf === '0'){
@@ -68,8 +70,8 @@ const CreatePoint = () =>{
         else{
       
          axios.get<city_response[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then(res=>{
-       const cityNames = res.data.map(city => city.nome)
-            setCities(cityNames)
+         const cityNames = res.data.map(city => city.nome)
+         setCities(cityNames)
         })
     
     }
@@ -142,7 +144,7 @@ const CreatePoint = () =>{
       await  api.post('points',data)
 
       alert('Ponto de coleta criado')
-
+        history.push('/')
     }
 
     return(
