@@ -1,4 +1,4 @@
-import React ,{useEffect, useState, ChangeEvent}from 'react'
+import React ,{useEffect, useState, ChangeEvent, FormEvent}from 'react'
 import './style.css'
 import {Link} from 'react-router-dom'
 import {FiArrowLeft} from 'react-icons/fi' 
@@ -74,6 +74,7 @@ const CreatePoint = () =>{
     
     }
     },[selectedUf]) 
+    
     useEffect(()=>{  //carregar cidades ao selecionar uf
       
         navigator.geolocation.getCurrentPosition(position =>{  //retornar a posição do usuario
@@ -118,8 +119,30 @@ const CreatePoint = () =>{
 
     }
 
-    function handleSubmit(){
-        
+   async function handleSubmit(event: FormEvent){
+        event.preventDefault();
+
+        const {name, email, whatsapp} = formData;
+        const uf = selectedUf
+        const city = selectedCity
+        const [latitude, longitude] = selectedPosition
+        const items = selectedItems;
+
+        const data = {
+            name,
+            email,
+            whatsapp,
+            uf,
+            city,
+            latitude,
+            longitude,
+            items
+        }
+
+      await  api.post('points',data)
+
+      alert('Ponto de coleta criado')
+
     }
 
     return(
@@ -133,7 +156,7 @@ const CreatePoint = () =>{
 
             </header>
 
-         <form action="">
+         <form onSubmit={handleSubmit} >
              <h1>Cadastro do <br/> ponto de coleta</h1>
              <fieldset>
                  <legend>
