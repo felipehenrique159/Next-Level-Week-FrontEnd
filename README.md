@@ -12,7 +12,7 @@ Desenvolvimento front-End da aplicação da semana Next-Level-Week chamado Ecole
 
 Aplicação simples e intuitiva que usa conceitos bem legais do react js
 
-## Tecnologias utilizadas:
+## Tecnologias e libs utilizadas:
 
 - ### React JS
 - ### React Router Dom 
